@@ -13,11 +13,11 @@ class SiteCompiler {
     this.options = options
   }
 
-  compile(options: { watch?: boolean } = {}) {
+  async compile(options: { watch?: boolean } = {}) {
     setCompilerOptions(this.options)
     webpackConfig.output!.path = this.options.distDir
     if (!options.watch) {
-      this.defines(webpackConfig)
+      await this.defines(webpackConfig)
     }
     const compiler = webpack(webpackConfig)
     if (options.watch) {
@@ -36,19 +36,14 @@ class SiteCompiler {
     })
   }
 
-  defines(webpackConfig: WebpackConfiguration) {
+  async defines(webpackConfig: WebpackConfiguration) {
+    for (let group of siteConfig.compSidebar) {
+      for(let item of group.items) {
+        item.html = await parseComponentDoc({ markdown: item.markdown })
+      }
+    }
     webpackConfig.plugins!.push(new DefinePlugin({
-      __COMP_SIDEBAR_MENU__: JSON.stringify(siteConfig.compSidebar.map(group => {
-        return {
-          ...group,
-          items: group.items.map(item => {
-            return {
-              ...item,
-              html: parseComponentDoc({ markdown: item.markdown })
-            }
-          })
-        }
-      })),
+      __COMP_SIDEBAR_MENU__: JSON.stringify(siteConfig.compSidebar),
     }))
   }
 }

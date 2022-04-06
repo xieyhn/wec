@@ -5,9 +5,9 @@ import { CompSidebarItem, SiteConfig } from '../site.config'
 import { setCurrentParseFilepath } from './marked/helper'
 import { getCompilerOptions } from '../helper/CompilerOptions'
 
-function parseComponentDoc(
+async function parseComponentDoc(
   { name, markdown }: { name?: string, markdown?: string }
-): string {
+): Promise<string> {
   if (!name && !markdown) return ''
   if (!markdown) {
     delete require.cache[require.resolve('../site.config')]
@@ -26,11 +26,12 @@ function parseComponentDoc(
   } else {
     mdPath = path.resolve(getCompilerOptions().compsDir, markdown)
   }
-  if (!fs.pathExistsSync(mdPath) || !fs.statSync(mdPath).isFile()) return ''
+  if (!(await fs.pathExists(mdPath)) || !fs.statSync(mdPath).isFile()) return ''
 
   setCurrentParseFilepath(mdPath)
+  
   return marked.parse(
-    fs.readFileSync(mdPath, { encoding: 'utf-8' }), 
+    await fs.readFile(mdPath, { encoding: 'utf-8' })
   )
 }
 

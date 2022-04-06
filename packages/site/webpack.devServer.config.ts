@@ -17,10 +17,10 @@ const devServerConfig: Configuration = {
       res.send(Result.success<GetCompSidebarMenuData>({ compSidebarMenu: compSidebar }))
     })
 
-    app!.post('/loadComponentDoc', (req, res) => {
+    app!.post('/loadComponentDoc', async (req, res) => {
       const { name } = req.body as { name: string }
       try {
-        res.send(Result.success<LoadComponentDocData>({ html: parseComponentDoc({ name }) }))
+        res.send(Result.success<LoadComponentDocData>({ html: await parseComponentDoc({ name }) }))
       } catch (err) {
         res.send(Result.fail(err as Error))
       }
