@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "target": "ESNext",
+    "module": "CommonJS",
+    "strict": true,
+    "alwaysStrict": true,
+    "lib": [
+      "ESNext",
+    ],
+    "moduleResolution": "Node",
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "resolveJsonModule": true
+  },
+  "include": [
+    "scripts/**/*",
+    "packages/site/**/*", 
+    "shims.d.ts"  
+  ],
+  "exclude": [
+    "node_modules",
+    "packages/site/web-app**/*"
+  ]
+}
