@@ -3,18 +3,28 @@ import ComponentCompiler from './ComponentCompiler'
 import { compsDir, compsDistDir, siteDistDir } from './consts'
 import SiteCompiler from '../packages/site/SiteCompiler'
 
-const args = minimist(process.argv)
-const watch = !!args.watch
+enum Application {
+  All = 'all',
+  Components = 'components',
+  Site = 'site'
+}
 
-const compCompiler = new ComponentCompiler({
-  srcDir: compsDir,
-  distDir: compsDistDir
-})
-const siteCompiler = new SiteCompiler({
-  compsDir,
-  distDir: siteDistDir
-})
+let { watch, app } = minimist(process.argv)
+watch = !!watch
 
-// 组件编译
-compCompiler.compile({ watch })
-siteCompiler.compile({ watch })
+if ([Application.All, Application.Components].includes(app)) {
+  const compCompiler = new ComponentCompiler({
+    srcDir: compsDir,
+    distDir: compsDistDir
+  })
+  compCompiler.compile({ watch })
+}
+
+if ([Application.All, Application.Site].includes(app)) {
+  const siteCompiler = new SiteCompiler({
+    compsDir,
+    distDir: siteDistDir
+  })
+
+  siteCompiler.compile({ watch })
+}

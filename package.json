@@ -1,8 +1,9 @@
 {
   "name": "wec",
   "scripts": {
-    "start": "cross-env NODE_ENV=development npx ts-node scripts/index.ts --watch",
-    "build": "cross-env NODE_ENV=production npx ts-node scripts/index.ts",
+    "start:comp": "npx ts-node scripts/index.ts --app components --watch",
+    "start:site": "cross-env NODE_ENV=development npx ts-node scripts/index.ts --app site --watch",
+    "build": "cross-env NODE_ENV=production npx ts-node scripts/index.ts --app all",
     "postinstall": "husky install"
   },
   "author": "xieyuhang",

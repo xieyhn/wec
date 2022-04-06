@@ -49,7 +49,7 @@ class ComponentCompiler {
   }
 
   compile(options: { watch?: boolean } = {}) {
-    rimraf(this.distDir, {}, () => {})
+    rimraf.sync(this.distDir, {})
     if (options.watch) {
       const watcher = chokidar.watch('**/*', { cwd: this.srcDir });
       watcher.on('add', p => {
@@ -68,8 +68,6 @@ class ComponentCompiler {
         }
       });
     } else {
-      console.log('--------------')
-      console.log(glob.sync('**/*', { cwd: this.srcDir, nodir: true }))
       glob.sync('**/*', { cwd: this.srcDir, nodir: true }).forEach((p) => this._compile(p));
     }
   }
