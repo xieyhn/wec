@@ -74,13 +74,17 @@ class ComponentCompiler {
 
   private _compile(filename: string) {
     if (/package.*\.json$/.test(filename)) return
+    if (/tsconfig.json$/.test(filename)) return
     if (mdReg.test(filename)) return
     
     const src = path.resolve(this.srcDir, filename)
     const dist = path.resolve(this.distDir, this.getTargetFilename(filename))
 
     if (tsReg.test(src)) {
-      this.tsCompiler(src, dist, componentsTSConfig)
+      const tsconfig = fs.readJSONSync(
+        path.resolve(this.srcDir, 'tsconfig.json')
+      )
+      this.tsCompiler(src, dist, tsconfig.compilerOptions as ts.CompilerOptions)
     } else if (scssReg.test(src)) {
       this.scssCompiler(src, dist)
     } else {
@@ -95,7 +99,13 @@ class ComponentCompiler {
   private tsCompiler(src: string, dist: string, options: ts.CompilerOptions) {
     compilingLog(src, dist)
     try {
-      ts.createProgram([src], options).emit()
+      const { outputText } = ts.transpileModule(
+        fs.readFileSync(src, { encoding: 'utf-8' }).toString(),
+        {
+          compilerOptions: options
+        }
+      )
+      fs.outputFileSync(dist, outputText)
     } catch (err) {
       compileCatchErrorLog(err as Error)
     }
