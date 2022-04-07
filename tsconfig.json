@@ -20,6 +20,6 @@
   ],
   "exclude": [
     "node_modules",
-    "packages/site/web-app**/*"
+    "packages/site/web-app/**/*"
   ]
 }
