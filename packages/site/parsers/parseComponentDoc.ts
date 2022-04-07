@@ -1,17 +1,17 @@
 import path from 'path'
 import fs from 'fs-extra'
 import marked from './marked/index'
-import { CompSidebarItem, SiteConfig } from '../site.config'
+import { CompSidebarItem } from '../site.config'
 import { setCurrentParseFilepath } from './marked/helper'
 import { getCompilerOptions } from '../helper/CompilerOptions'
+import requireSiteConfig from '../helper/requireSiteConfig'
 
 async function parseComponentDoc(
   { name, markdown }: { name?: string, markdown?: string }
 ): Promise<string> {
   if (!name && !markdown) return ''
   if (!markdown) {
-    delete require.cache[require.resolve('../site.config')]
-    const { default: siteConfig } = require('../site.config') as { default: SiteConfig }
+    const siteConfig = requireSiteConfig()
     const menuItem = 
       siteConfig
       .compSidebar

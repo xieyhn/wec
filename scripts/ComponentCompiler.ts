@@ -6,7 +6,6 @@ import chokidar from 'chokidar'
 import { wait } from './helper';
 import glob from 'glob'
 import ts from 'typescript'
-import componentsTSConfig from './components.tsconfig'
 import rimraf from 'rimraf'
 
 interface ComponentCompilerOptions {
